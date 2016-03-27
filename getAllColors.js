@@ -1,13 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const dirToParse = 'app/assets/stylesheets/';
-const skipFile = 'app/assets/stylesheets/shared/colors.scss'
-const colorRegexp = /(#[A-Z\d]{3}\b|#[A-Z\d]{6}\b)|(rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?([, \.\d]+)?\))/gi;
+const colorRegexp = /(#[A-F\d]{3}\b|#[A-F\d]{6}\b)|(rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?([, \.\d]+)?\))/gi;
 const variableMap = new Map();
 const process = require('process');
 const args = processArguments(process.argv);
+
 var colorMap = new Map();
 var fileCounter = 0;
+
+// Adjust these constants for your needs
+// Directory where to search for files
+const dirToParse = '/app/assets/stylesheets/';
+// File for color schema or one that should be skipped for search
+const skipFile = '/app/assets/stylesheets/shared/colors.scss'
+// Change LOCALHOST_OR_POW_APP_URL to url of your rails app on localhost
+const xrayUrl = 'http://LOCALHOST_OR_POW_APP_URL/_xray/open?path=';
 
 console.log(process.argv);
 
@@ -113,7 +120,6 @@ function mainHandler() {
 }
 
 function printToHTMLColorMap(map) {
-  const xrayUrl = 'http://LOCALHOST_OR_POW_APP_URL/_xray/open?path=';
   const header = `
     <!doctype html>
     <html>
