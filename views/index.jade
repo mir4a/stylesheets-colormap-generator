@@ -1,5 +1,66 @@
 extends layout
 
+block flash
+  .notification(class="#{flash.type}") {flash.message}
+
 block content
-  h1= title
-  p Welcome to #{title}
+  form#welcomeStep1(method="post" action="/settings" name="projectPath")
+    h2 #1
+    label(for="projectPath")
+      h4 First, show me the path to your project
+      input(type="text" id="projectPath" name="projectPath")
+      br
+      small.hint
+        | For example: 
+        code /Users/username/projects/your-super-project
+      br
+      button Next
+
+
+
+  form#welcomeStep2(method="post" action="/settings" name="stylesheetsPath")
+    h2 #2
+    label(for="stylesheetsPath")
+      h4 Second, show me the path to stylesheets
+      input(type="text" id="stylesheetsPath" name="stylesheetsPath")
+      br
+      small.hint
+        | Relative to 
+        span.projectPath your project path 
+        | + 
+        code /app/assets/stylesheets
+      br
+      button Next
+
+  form#welcomeStep3(method="post" action="/settings" name="schemePath")
+    h2 #3
+    label(for="schemePath")
+      h4
+        | Third, show me the path to
+        | 
+        abbr(title="Simply the SCSS file with variable: color code list") ColorSchema
+      input(type="text" id="schemePath" name="schemePath")
+      br
+      small.hint
+        | Relative to 
+        span.projectPath your project path 
+        | + 
+        code /app/assets/stylesheets/shared/colors.scss
+      br
+      button(type="submit") Next
+      br
+      p.or
+        | Let me 
+        button#generateScheme Generate
+        | 
+        | ColorScheme for you.
+      small
+        | I'll create file in root of 
+        span.stylesheetsPath your stylesheets path
+        | with name 
+        b colors.scss
+
+
+
+
+

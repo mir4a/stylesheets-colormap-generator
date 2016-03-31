@@ -15,7 +15,9 @@ describe('Welcome page' , function() {
 
   it('shout has demo text', function(done) {
     request(homeUrl, function(err, res, body) {
-      expect(body).to.contain('Step 1. Select directory for colors search');
+      expect(body).to.contain('welcomeStep1');
+      expect(body).to.contain('welcomeStep2');
+      expect(body).to.contain('welcomeStep3');
       done();
     });
   });
