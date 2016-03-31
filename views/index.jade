@@ -1,14 +1,15 @@
 extends layout
 
 block flash
-  .notification(class="#{flash.type}") {flash.message}
+  if flash
+    .notification(class="#{flash.type}")= flash.message
 
 block content
-  form#welcomeStep1(method="post" action="/settings" name="projectPath")
+  form#welcome-step-1(method="post" action="/settings" name="project-path")
     h2 #1
-    label(for="projectPath")
+    label(for="project-path")
       h4 First, show me the path to your project
-      input(type="text" id="projectPath" name="projectPath")
+      input(type="text" id="project-path" name="project-path")
       br
       small.hint
         | For example: 
@@ -18,32 +19,32 @@ block content
 
 
 
-  form#welcomeStep2(method="post" action="/settings" name="stylesheetsPath")
+  form#welcome-step-2(method="post" action="/settings" name="stylesheets-path")
     h2 #2
-    label(for="stylesheetsPath")
+    label(for="stylesheets-path")
       h4 Second, show me the path to stylesheets
-      input(type="text" id="stylesheetsPath" name="stylesheetsPath")
+      input(type="text" id="stylesheets-path" name="stylesheets-path")
       br
       small.hint
         | Relative to 
-        span.projectPath your project path 
+        span.project-path your project path 
         | + 
         code /app/assets/stylesheets
       br
       button Next
 
-  form#welcomeStep3(method="post" action="/settings" name="schemePath")
+  form#welcome-step-3(method="post" action="/settings" name="scheme-path")
     h2 #3
-    label(for="schemePath")
+    label(for="scheme-path")
       h4
         | Third, show me the path to
         | 
         abbr(title="Simply the SCSS file with variable: color code list") ColorSchema
-      input(type="text" id="schemePath" name="schemePath")
+      input(type="text" id="scheme-path" name="scheme-path")
       br
       small.hint
         | Relative to 
-        span.projectPath your project path 
+        span.project-path your project path 
         | + 
         code /app/assets/stylesheets/shared/colors.scss
       br
@@ -56,7 +57,7 @@ block content
         | ColorScheme for you.
       small
         | I'll create file in root of 
-        span.stylesheetsPath your stylesheets path
+        span.stylesheets-path your stylesheets path
         | with name 
         b colors.scss
 

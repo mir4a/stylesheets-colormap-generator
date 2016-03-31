@@ -15,9 +15,9 @@ describe('Welcome page' , function() {
 
   it('shout has demo text', function(done) {
     request(homeUrl, function(err, res, body) {
-      expect(body).to.contain('welcomeStep1');
-      expect(body).to.contain('welcomeStep2');
-      expect(body).to.contain('welcomeStep3');
+      expect(body).to.contain('welcome-step-1');
+      expect(body).to.contain('welcome-step-2');
+      expect(body).to.contain('welcome-step-3');
       done();
     });
   });
