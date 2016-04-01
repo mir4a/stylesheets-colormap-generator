@@ -69,7 +69,7 @@ router.post('/', (req, res, next) => {
 
   let settingsFile = path.resolve(req.body['project-path'], config.settingsFileName);
   console.log(settingsFile);
-  res.app.colormapProject = req.body['project-path'];
+  req.app.locals.colormapProject = req.body['project-path'];
 
   checkSettingsFile(settingsFile)
     .then(
@@ -84,12 +84,15 @@ router.post('/', (req, res, next) => {
       }
     )
     .then(
-      settigns => {
-        res.app.locals.colormapSettings = settings;
-        res.send(settigns);
+      settings => {
+        console.log(settings);
+        req.app.locals.colormapSettings = settings;
+        console.log(req.app.locals);
+        res.redirect('/colors');
       }
     )
     .catch(error => {
+      console.error(error);
       res.locals.flash = {
         type: 'error',
         message: 'No settings file'
@@ -103,11 +106,13 @@ router.post('/', (req, res, next) => {
 Save Stylesheets path into settings file
  */
 router.post('/stylesheets', (req, res, next) => {
-  let stylesPath = path.resolve(res.app.locals.colormapProject, req.body['stylesheets-path']);
+  let stylesPath = path.resolve(req.app.locals.colormapProject, req.body['stylesheets-path']);
   console.log(stylesPath);
-  if (!res.app.colormapSettings['stylesheets-path']) {
-    res.app.colormapSettings['stylesheets-path'] = req.body['stylesheets-path'];
+  if (!req.app.locals.colormapSettings['stylesheets-path']) {
+    req.app.locals.colormapSettings['stylesheets-path'] = req.body['stylesheets-path'];
   }
+
+  // FIXME: WTF?
 
 });
 

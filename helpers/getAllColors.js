@@ -1,9 +1,10 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
+const jade = require('jade');
 const colorRegexp = /(#[A-F\d]{3}\b|#[A-F\d]{6}\b)|(rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?([, \.\d]+)?\))/gi;
 const variableMap = new Map();
-const process = require('process');
-const args = processArguments(process.argv);
 
 var colorMap = new Map();
 var fileCounter = 0;
@@ -16,30 +17,42 @@ function searchForColorInFile(data, filePath) {
   var result = [];
   var test;
   var lines = data.split('\n');
+  var pastLineLength = 0;
   for (var i = 0, len = lines.length; i < len; i++) {
     var lineStr = `${filePath}:${i+1}:`;
+    if (i > 0) {
+      pastLineLength += lines[i - 1].length;
+    }
     while (test = colorRegexp.exec(lines[i])) {
-      addToMap(test[0], lineStr + (test.index + 1), colorMap);
+      // FIXME: Find out how to extract alpha channel
+      let colorData = {
+        alpha: 1,
+        path: lineStr + (test.index + 1),
+        originalValue: test[0],
+        startPos: pastLineLength + test.index + 1
+      }
+      addToMap(test[0], colorData, colorMap);
       result.push(test[0]);
     }
   }
   return result;
 }
 
-function addToMap(color, place, map) {
+
+function addToMap(color, colorData, map) {
   var normalizedColor = color.toLowerCase();
   var longColor = convertShortHEXtoLong(normalizedColor);
   if (map.has(longColor)) {
-    var val = map.get(longColor);
-    val.place.push(place);
+    let val = map.get(longColor);
+    val.meta.push(colorData);
     val.index = getColorIndex(longColor);
     map.set(longColor, val);
   } else {
-    var val2 = {
-      place: [],
+    let val2 = {
+      meta: [],
       index: 0
     };
-    val2.place.push(place);
+    val2.meta.push(colorData);
     val2.index = getColorIndex(longColor);
     map.set(longColor, val2);
   }
@@ -55,21 +68,20 @@ function pathType(path) {
   return type;
 }
 
-function processDir(path) {
+function processDir(path, skip) {
   var files = [];
   if (typeof path === 'array') {
     for (var el of path) {
       files = fs.readdirSync(el);
-      main(files, ela);
+      main(files, el, skip);
     }
   } else {
     files = fs.readdirSync(path);
-    main(files, path);
+    main(files, path, skip);
   }
 }
 
-function main(files, dir) {
-  dir = dir ? dir : dirToParse;
+function main(files, dir, skip) {
   var data,
       filePath,
       pType,
@@ -79,7 +91,7 @@ function main(files, dir) {
     pType = pathType(filePath);
 
     if (pType === 'FILE') {
-      if (filePath === path.resolve(skipFile)) continue;
+      // if (filePath === path.resolve(skip)) continue;
       data = fs.readFileSync(filePath, 'utf-8');
       colors = searchForColorInFile(data, filePath);
       countAndPrintProcessedFiles(filePath, colors);
@@ -98,13 +110,31 @@ function countAndPrintProcessedFiles(filePath, colors) {
   return fileCounter;
 }
 
-function mainHandler(dir) {
+function mainHandler(dir, skip) {
   var start = new Date();
   var end, diff;
-  processDir(dir);
+  processDir(dir, skip);
   end = new Date();
   diff = end - start;
   console.log(`Finished for ${diff}ms, found ${colorMap.size} colors`);
+  return colorMap;
+}
+
+function generateMarkup(map) {
+  var colors = '';
+  var sortedColors = insertionSortForColors([...map.keys()], map);
+  var html = '';
+
+  sortedColors.forEach((val)=>{
+    let title = '';
+    let index = map.get(val).index;
+    map.get(val).meta.forEach((meta)=>{1
+      title += `${meta.path}\n`;
+    });
+    html += jade.renderFile(path.resolve('views/partials/color.jade'), {val: val, title: title, index: index});
+  });
+  return html;
+
 }
 
 
@@ -228,4 +258,5 @@ module.exports = {
   gather: mainHandler,
   colorIndex: getColorIndex,
   sort: insertionSortForColors,
+  markup: generateMarkup,
 }

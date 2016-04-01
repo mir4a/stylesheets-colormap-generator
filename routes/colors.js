@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
+
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+const gatherColors = require('../helpers/getAllColors');
+const jade = require('jade');
 
 /* GET colors listing. */
 router.get('/', function(req, res) {
-  res.render('colors', { title: 'Colors' });
+  var stylesheetsPath = path.resolve(req.app.locals.colormapProject, req.app.locals.colormapSettings['stylesheets-path']);
+  var colors = gatherColors.gather(stylesheetsPath, req.app.locals.colormapSettings['scheme-path']);
+  var html = gatherColors.markup(colors);
+  res.render('colors', { title: 'Colors', colors: [...colors.keys()], html: html });
 });
 
 module.exports = router;

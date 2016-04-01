@@ -5,22 +5,18 @@ block flash
     .notification(class="#{flash.type}")= flash.message
 
 block content
-  #colors
-    each color in colors
-      .color(style="background:#{color.color}" title="#{color.title}")
-        b= color.color
-        i= color.index
+  #colors !{html}
 
   #modal
     small#close (close)
     h5#modal-title
     pre#modal-content
 
-  #merge
-    h4.title Select master color
-    .merge-list
-      each master in masterColors
-        .merge-item(style="background:#{master.color}")
-          span= master.color
+  //- #merge
+  //-   h4.title Select master color
+  //-   .merge-list
+  //-     each master in masterColors
+  //-       .merge-item(style="background:#{master.color}")
+  //-         span= master.color
 
 

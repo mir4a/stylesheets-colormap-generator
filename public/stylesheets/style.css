@@ -6,3 +6,56 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+#colors {
+  padding: 0;
+  margin: 0;
+  font-size: 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  background: repeating-linear-gradient( 135deg, #FFF, #FFF 9px, #000 9px, #000 11px);
+  background-attachment: fixed;
+}
+.color b,
+.color i {
+  pointer-events: none;
+}
+.color {
+  font: italic 10px/1 arial;
+  color: #333;
+  text-align: center;
+  display: flex;
+  min-width: 200px;
+  height: 40px;
+  text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff;
+  flex: auto;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-around;
+  align-content: center;
+}
+.color:hover {
+  transform: scale(1.05);
+}
+#modal {
+  font-size: 14px;
+  display: none;
+  position: fixed;
+  padding: 20px;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  background: rgba(250,250,250,0.95);
+  overflow: auto;
+  text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff;
+}
+#close {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+}
