@@ -9,6 +9,7 @@ const jade = require('jade');
 /* GET colors listing. */
 router.get('/', function(req, res) {
   var stylesheetsPath = path.resolve(req.app.locals.colormapProject, req.app.locals.colormapSettings['stylesheets-path']);
+  console.log(stylesheetsPath);
   var colors = gatherColors.gather(stylesheetsPath, req.app.locals.colormapSettings['scheme-path']);
   var html = gatherColors.markup(colors);
   res.render('colors', { title: 'Colors', colors: [...colors.keys()], html: html });

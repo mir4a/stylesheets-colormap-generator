@@ -117,6 +117,7 @@ function mainHandler(dir, skip) {
   end = new Date();
   diff = end - start;
   console.log(`Finished for ${diff}ms, found ${colorMap.size} colors`);
+  fileCounter = 0;
   return colorMap;
 }
 
@@ -128,13 +129,17 @@ function generateMarkup(map) {
   sortedColors.forEach((val)=>{
     let title = '';
     let index = map.get(val).index;
-    map.get(val).meta.forEach((meta)=>{1
+    map.get(val).meta.forEach((meta)=>{
       title += `${meta.path}\n`;
     });
-    html += jade.renderFile(path.resolve('views/partials/color.jade'), {val: val, title: title, index: index});
+    html += `
+      <div class="color" style="background: ${val}" title="${title}">
+        <b>${val}</b>
+        <i>${index}</i>
+      </div>
+    `;
   });
   return html;
-
 }
 
 
