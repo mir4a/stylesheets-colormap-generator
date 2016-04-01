@@ -3,11 +3,6 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
-}
-
-
 #colors {
   padding: 0;
   margin: 0;
@@ -20,10 +15,12 @@ a {
   background: repeating-linear-gradient( 135deg, #FFF, #FFF 9px, #000 9px, #000 11px);
   background-attachment: fixed;
 }
+
 .color b,
 .color i {
   pointer-events: none;
 }
+
 .color {
   font: italic 10px/1 arial;
   color: #333;
@@ -38,9 +35,11 @@ a {
   justify-content: space-around;
   align-content: center;
 }
+
 .color:hover {
   transform: scale(1.05);
 }
+
 #modal {
   font-size: 14px;
   display: none;
@@ -54,6 +53,11 @@ a {
   overflow: auto;
   text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff;
 }
+
+input[type=text] {
+  width: 400px;
+}
+
 #close {
   position: absolute;
   right: 5px;

@@ -1,4 +1,4 @@
-document.addEventListener('click', toggleModal);
+document.addEventListener('dblclick', toggleModal);
 document.addEventListener('keyup', escHandler);
 function toggleModal(e) {
   console.log(e);

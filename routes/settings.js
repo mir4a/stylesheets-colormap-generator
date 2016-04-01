@@ -68,7 +68,6 @@ function checkDir(path) {
 router.post('/', (req, res, next) => {
 
   let settingsFile = path.resolve(req.body['project-path'], config.settingsFileName);
-  console.log(settingsFile);
   req.app.locals.colormapProject = req.body['project-path'];
 
   checkSettingsFile(settingsFile)
@@ -85,9 +84,7 @@ router.post('/', (req, res, next) => {
     )
     .then(
       settings => {
-        console.log(settings);
         req.app.locals.colormapSettings = settings;
-        console.log(req.app.locals);
         res.redirect('/colors');
       }
     )
