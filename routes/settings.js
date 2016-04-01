@@ -44,11 +44,32 @@ function getFileData(filePath) {
 }
 
 
-/* GET settings. */
-router.post('/', function(req, res, next) {
+/**
+ * [checkDir description]
+ * @param  {[type]} path [description]
+ * @return {[type]}      [description]
+ */
+function checkDir(path) {
+  return new Promise((resolve, reject) => {
+    fs.stat(path, (err, stats) => {
+      if (err) {
+        reject(err);
+      } else if (stats.isDirectory()) {
+        resolve(path);
+      } else {
+        reject(new Error('Not a Directory'));
+      }
+    });
+  });
+}
 
-  var settingsFile = path.resolve(req.body['project-path'], config.settingsFileName);
+
+/* GET settings. */
+router.post('/', (req, res, next) => {
+
+  let settingsFile = path.resolve(req.body['project-path'], config.settingsFileName);
   console.log(settingsFile);
+  res.app.colormapProject = req.body['project-path'];
 
   checkSettingsFile(settingsFile)
     .then(
@@ -64,6 +85,7 @@ router.post('/', function(req, res, next) {
     )
     .then(
       settigns => {
+        res.app.locals.colormapSettings = settings;
         res.send(settigns);
       }
     )
@@ -74,6 +96,18 @@ router.post('/', function(req, res, next) {
       };
       res.render('index');
     });
+
+});
+
+/*
+Save Stylesheets path into settings file
+ */
+router.post('/stylesheets', (req, res, next) => {
+  let stylesPath = path.resolve(res.app.locals.colormapProject, req.body['stylesheets-path']);
+  console.log(stylesPath);
+  if (!res.app.colormapSettings['stylesheets-path']) {
+    res.app.colormapSettings['stylesheets-path'] = req.body['stylesheets-path'];
+  }
 
 });
 
