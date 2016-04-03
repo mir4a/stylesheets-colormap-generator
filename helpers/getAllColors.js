@@ -4,12 +4,19 @@ const fs = require('fs');
 const path = require('path');
 const jade = require('jade');
 const colorRegexp = /(#[A-F\d]{3}\b|#[A-F\d]{6}\b)|(rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?([, \.\d]+)?\))/gi;
+const sassVariableRegexp = /(\$[\S\d]+)\b/gi;
 var colorMap;
 var fileCounter = 0;
 
 
-
-function searchForColorInFile(data, filePath) {
+/**
+ * Search for colors in stylesheets, add them into color map
+ * @param  {[type]} data     [description]
+ * @param  {[type]} filePath [description]
+ * @param  {[type]} map      [description]
+ * @return {[type]}          Array of colors
+ */
+function parseStylesheetsColors(data, filePath, map) {
   var result = [];
   var test;
   var lines = data.split('\n');
@@ -27,8 +34,33 @@ function searchForColorInFile(data, filePath) {
         originalValue: test[0],
         startPos: pastLineLength + test.index + 1
       };
-      addToMap(test[0], colorData, colorMap);
+      addToMap(test[0], colorData, map);
       result.push(test[0]);
+    }
+  }
+  return result;
+}
+
+
+/**
+ * Search for colors in color scheme and prepare data output for view
+ * @param  {[type]} data     [description]
+ * @return {[type]}          Array of objects { color: , variable: }
+ */
+function parseColorSheme(data) {
+  var result = [];
+  var test;
+  var variable;
+  var lines = data.split('\n');
+  for (var i = 0, len = lines.length; i < len; i++) {
+    // FIXME: Find out how to extract alpha channel
+    while (test = colorRegexp.exec(lines[i])) {
+      while (variable = sassVariableRegexp.exec(lines[i])) {
+        result.push({
+          color: test[0],
+          variable: variable[0]
+        });
+      }
     }
   }
   return result;
@@ -87,17 +119,26 @@ function main(files, dir, skip) {
     pType = pathType(filePath);
 
     if (pType === 'FILE') {
-      if (filePath === skip) continue;
+      if (filePath === skip) {
+        continue;
+      }
+
       data = fs.readFileSync(filePath, 'utf-8');
-      colors = searchForColorInFile(data, filePath);
+      colors = parseStylesheetsColors(data, filePath, colorMap);
       countAndPrintProcessedFiles(filePath, colors);
     } else if (pType === 'DIRECTORY') {
-      processDir(filePath);
+      processDir(filePath, skip);
     } else {
       console.log(`${filePath} is not file`);
     }
 
   }
+}
+
+function handleScheme(filePath) {
+  var data = fs.readFileSync(filePath, 'utf-8');
+  var scheme = parseColorSheme(data);
+  return scheme;
 }
 
 function countAndPrintProcessedFiles(filePath, colors) {
@@ -267,4 +308,5 @@ module.exports = {
   colorIndex: getColorIndex,
   sort: insertionSortForColors,
   markup: generateMarkup,
-}
+  scheme: handleScheme,
+};

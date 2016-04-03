@@ -11,21 +11,7 @@ router.get('/', function(req, res) {
   var colorSchemePath = path.resolve(req.app.locals.colormapProject, req.app.locals.colormapSettings['scheme-path']);
   var colors = gatherColors.gather(stylesheetsPath, colorSchemePath);
   var html = gatherColors.markup(colors);
-  // var scheme = gatherColors.scheme(colorSchemePath);
-  var scheme = [
-    {
-      color: '#fff',
-      variable: '$color-white'
-    },
-    {
-      color: '#ddd',
-      variable: '$color-gray'
-    },
-    {
-      color: '#333',
-      variable: '$color-dark-gray'
-    }
-  ];
+  var scheme = gatherColors.scheme(colorSchemePath);
   res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
 });
 
