@@ -4,13 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const jade = require('jade');
 const colorRegexp = /(#[A-F\d]{3}\b|#[A-F\d]{6}\b)|(rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?([, \.\d]+)?\))/gi;
-const variableMap = new Map();
-
-var colorMap = new Map();
+var colorMap;
 var fileCounter = 0;
 
-
-const xrayUrl = 'http://LOCALHOST_OR_POW_APP_URL/_xray/open?path=';
 
 
 function searchForColorInFile(data, filePath) {
@@ -30,7 +26,7 @@ function searchForColorInFile(data, filePath) {
         path: lineStr + (test.index + 1),
         originalValue: test[0],
         startPos: pastLineLength + test.index + 1
-      }
+      };
       addToMap(test[0], colorData, colorMap);
       result.push(test[0]);
     }
@@ -111,6 +107,8 @@ function countAndPrintProcessedFiles(filePath, colors) {
 }
 
 function mainHandler(dir, skip) {
+  colorMap = new Map();
+
   var start = new Date();
   var end, diff;
   processDir(dir, skip);
@@ -121,6 +119,11 @@ function mainHandler(dir, skip) {
   return colorMap;
 }
 
+/**
+ * Generates html markup for output in colors list
+ * @param map
+ * @returns {string}
+ */
 function generateMarkup(map) {
   var colors = '';
   var sortedColors = insertionSortForColors([...map.keys()], map);

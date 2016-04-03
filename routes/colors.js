@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const gatherColors = require('../helpers/getAllColors');
-const jade = require('jade');
 
 /* GET colors listing. */
 router.get('/', function(req, res) {
