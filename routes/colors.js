@@ -8,10 +8,25 @@ const gatherColors = require('../helpers/getAllColors');
 /* GET colors listing. */
 router.get('/', function(req, res) {
   var stylesheetsPath = path.resolve(req.app.locals.colormapProject, req.app.locals.colormapSettings['stylesheets-path']);
-  console.log(stylesheetsPath);
-  var colors = gatherColors.gather(stylesheetsPath, req.app.locals.colormapSettings['scheme-path']);
+  var colorSchemePath = path.resolve(req.app.locals.colormapProject, req.app.locals.colormapSettings['scheme-path']);
+  var colors = gatherColors.gather(stylesheetsPath, colorSchemePath);
   var html = gatherColors.markup(colors);
-  res.render('colors', { title: 'Colors', colors: [...colors.keys()], html: html });
+  // var scheme = gatherColors.scheme(colorSchemePath);
+  var scheme = [
+    {
+      color: '#fff',
+      variable: '$color-white'
+    },
+    {
+      color: '#ddd',
+      variable: '$color-gray'
+    },
+    {
+      color: '#333',
+      variable: '$color-dark-gray'
+    }
+  ];
+  res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
 });
 
 module.exports = router;

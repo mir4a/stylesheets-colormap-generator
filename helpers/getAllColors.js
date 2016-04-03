@@ -87,7 +87,7 @@ function main(files, dir, skip) {
     pType = pathType(filePath);
 
     if (pType === 'FILE') {
-      // if (filePath === path.resolve(skip)) continue;
+      if (filePath === skip) continue;
       data = fs.readFileSync(filePath, 'utf-8');
       colors = searchForColorInFile(data, filePath);
       countAndPrintProcessedFiles(filePath, colors);
