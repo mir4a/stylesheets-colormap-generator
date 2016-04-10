@@ -36,7 +36,7 @@ function escHandler(e) {
 }
 
 function createLinkList(text) {
-  var textArr = text.split('\\n');
+  var textArr = text.split('\n');
   var tmp = '';
   for (var i = 0, len = textArr.length; i < len; i++) {
     tmp += '<a href="#' + textArr[i] + '" class="xray-link">' + textArr[i] + '</a><br>';

@@ -87,18 +87,5 @@ router.post('/', (req, res, next) => {
   res.redirect('/colors');
 });
 
-/*
-Save Stylesheets path into settings file
- */
-router.post('/stylesheets', (req, res, next) => {
-  let stylesPath = path.resolve(req.app.locals.colormapProject, req.body['stylesheets-path']);
-  console.log(stylesPath);
-  if (!req.app.locals.colormapSettings['stylesheets-path']) {
-    req.app.locals.colormapSettings['stylesheets-path'] = req.body['stylesheets-path'];
-  }
-
-  // FIXME: WTF?
-
-});
 
 module.exports = router;
