@@ -64,39 +64,27 @@ function checkDir(path) {
 }
 
 
-/* GET settings. */
+/**
+ * Save settings
+ * @param  {[type]} '/'   [description]
+ * @param  {[type]} (req, res,          next [description]
+ * @return {[type]}       [description]
+ */
 router.post('/', (req, res, next) => {
 
-  let settingsFile = path.resolve(req.body['project-path'], config.settingsFileName);
-  req.app.locals.colormapProject = req.body['project-path'];
+  let projectPath = req.body['project-path'];
+  let stylesheetsPath = path.resolve(projectPath, req.body['stylesheets-path']);
+  let schemePath = path.resolve(projectPath, req.body['scheme-path']);
+  let editor = req.body['editor'];
 
-  checkSettingsFile(settingsFile)
-    .then(
-      fileName => {
-        return getFileData(fileName);
-      }
-    )
-    .then(
-      data => {
-        let settings = JSON.parse(data);
-        return settings;
-      }
-    )
-    .then(
-      settings => {
-        req.app.locals.colormapSettings = settings;
-        res.redirect('/colors');
-      }
-    )
-    .catch(error => {
-      console.error(error);
-      res.locals.flash = {
-        type: 'error',
-        message: 'No settings file'
-      };
-      res.render('index');
-    });
+  req.app.locals.colormapSettings = {
+    projectPath: projectPath,
+    stylesheetsPath: stylesheetsPath,
+    schemePath: schemePath,
+    editor: editor
+  };
 
+  res.redirect('/colors');
 });
 
 /*

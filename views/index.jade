@@ -5,7 +5,7 @@ block flash
     .notification(class="#{flash.type}")= flash.message
 
 block content
-  form#welcome-step-1(method="post" action="/settings" name="project-path")
+  form#welcome-step-1(method="post" action="/settings" name="settings")
     h2 #1
     label(for="project-path")
       h4 First, show me the path to your project
@@ -14,12 +14,7 @@ block content
       small.hint
         | For example: 
         code /Users/username/projects/your-super-project
-      br
-      button Next
 
-
-
-  form#welcome-step-2(method="post" action="/settings" name="stylesheets-path" style="display:none")
     h2 #2
     label(for="stylesheets-path")
       h4 Second, show me the path to stylesheets
@@ -30,10 +25,8 @@ block content
         span.project-path your project path 
         | + 
         code /app/assets/stylesheets
-      br
-      button Next
 
-  form#welcome-step-3(method="post" action="/settings" name="scheme-path" style="display:none")
+
     h2 #3
     label(for="scheme-path")
       h4
@@ -48,18 +41,28 @@ block content
         | + 
         code /app/assets/stylesheets/shared/colors.scss
       br
-      button(type="submit") Next
-      br
       p.or(style="display: none")
         | Let me 
         button#generateScheme Generate
         | 
         | ColorScheme for you.
-      small
-        | I'll create file in root of 
-        span.stylesheets-path your stylesheets path
-        | with name 
-        b colors.scss
+        small
+          | I'll create file in root of 
+          span.stylesheets-path your stylesheets path
+          | with name 
+          b colors.scss
+
+    h2 #4
+    label(for="editor")
+      h4 Your IDE or editor (bash command name)
+      input(type="text" id="editor" name="editor")
+      br
+      small.hint
+        | For example, 
+        code mine 
+        | for RubyMine
+      br
+      button(type="submit") Next
 
 
 
