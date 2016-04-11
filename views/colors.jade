@@ -1,7 +1,7 @@
 extends layout
 
 block js
-  script(src='javascripts/main.js')
+  script(src='javascripts/bundle.js')
 
 block flash
   if flash
@@ -15,13 +15,13 @@ block content
     h5#modal-title
     pre#modal-content
 
-  #merge
-    h4.title Select master color
-    .merge-list
-      each master in masterColors
-        .merge-item(style="background:#{master.color}")
-          span= master.variable
-          | &nbsp;
-          small= master.color
-
-
+  aside.sidebar
+    button#share-colors Share colors
+    #merge
+      h4.title Select master color
+      .merge-list
+        each master in masterColors
+          .merge-item(style="background:#{master.color}")
+            span= master.variable
+            | &nbsp;
+            small= master.color
