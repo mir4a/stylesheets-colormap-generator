@@ -88,8 +88,8 @@
 	      var target = e.target;
 	      var classList = target.classList;
 	      if (classList.contains('merge-item')) {
-	        var mergeColor = target.dataset.mergeColor;
-	        this._mergeRequestHandler(mergeColor, this.selectedColors);
+	        var mergeVariable = target.dataset.mergeVariable;
+	        this._mergeRequestHandler(mergeVariable, this.selectedColors);
 	      } else {
 	        console.log(e);
 	      }
@@ -126,7 +126,7 @@
 	      var _this2 = this;
 
 	      var xhr = new XMLHttpRequest();
-	      var colorsParam = colors.join(' ');
+	      var colorsParam = colors.join(';');
 	      var params = 'mergeTo=' + encodeURIComponent(mergeTo) + '&colors=' + encodeURIComponent(colorsParam);
 	      xhr.open('GET', '/merge?' + params, true);
 	      xhr.send();

@@ -19,8 +19,8 @@ class ExtendedColorScheme extends ColorScheme {
     let target = e.target;
     let classList = target.classList;
     if (classList.contains('merge-item')) {
-      let mergeColor = target.dataset.mergeColor;
-      this._mergeRequestHandler(mergeColor, this.selectedColors);
+      let mergeVariable = target.dataset.mergeVariable;
+      this._mergeRequestHandler(mergeVariable, this.selectedColors);
     } else {
       console.log(e);
     }
@@ -51,7 +51,7 @@ class ExtendedColorScheme extends ColorScheme {
 
   _mergeRequestHandler(mergeTo, colors) {
     var xhr = new XMLHttpRequest();
-    let colorsParam = colors.join(' ');
+    let colorsParam = colors.join(';');
     let params = `mergeTo=${encodeURIComponent(mergeTo)}&colors=${encodeURIComponent(colorsParam)}`;
     xhr.open('GET', `/merge?${params}`, true);
     xhr.send();

@@ -13,6 +13,10 @@ router.get('/', function(req, res) {
     var colors = gatherColors.gather(stylesheetsPath, colorSchemePath);
     var html = gatherColors.markup(colors);
     var scheme = gatherColors.scheme(colorSchemePath);
+
+    req.app.locals.colors = colors;
+    req.app.locals.scheme = scheme;
+
     res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
   } else {
     res.redirect('/');
