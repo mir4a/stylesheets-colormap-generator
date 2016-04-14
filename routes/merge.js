@@ -23,17 +23,18 @@ function mergeColorsHandler(colorsMap, mergeTo, mergedColors) {
   let colors = mergedColors.split(';');
   console.log(colors);
 
-  try {
-    for (let i in colors) {
-      let colorObj = colorsMap.get(colors[i]);
+  for (let i in colors) {
+    let colorObj = colorsMap.get(colors[i]);
 
-      console.log(mergeTo);
-      console.log(colors[i]);
-      console.log(colorObj);
-    }
-  } catch (err) {
-    console.error(err);
+    console.log(mergeTo);
+    console.log(colors[i]);
+    console.log(colorObj);
   }
+
+}
+
+function handleEditFiles(list, variable) {
+
 }
 
 module.exports = router;

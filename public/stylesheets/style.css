@@ -1,5 +1,6 @@
 body {
-  padding: 50px;
+  padding: 0;
+  margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -17,6 +18,8 @@ body {
 }
 
 #colors {
+  float: left;
+  width: 70%;
   padding: 0;
   margin: 0;
   font-size: 0;
@@ -52,7 +55,7 @@ body {
 }
 
 .color:hover {
-  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .selected {
@@ -95,6 +98,42 @@ input[type=text] {
 }
 
 /*Side panerl*/
+.sidebar {
+  float: left;
+  width: 30%;
+}
+
 #merge {
+  padding: 20px;
   visibility: hidden;
+}
+
+.merge-item {
+  padding: 5px 10px;
+  text-shadow:
+    1px 1px 1px rgba(255,255,255,0.5),
+    1px -1px 1px rgba(255,255,255,0.5),
+    0 1px 1px rgba(255,255,255,0.5),
+    0 -1px 1px rgba(255,255,255,0.5);
+}
+
+.merge-item:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+#share-colors {
+  font: italic 18px/1.5 sans-serif;
+  color: #fff;
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  background: navy;
+  border: 0;
+  box-shadow: 0 5px 0 -3px #00f;
+}
+
+#share-colors:hover {
+  cursor: pointer;
+  background: #00d;
 }
