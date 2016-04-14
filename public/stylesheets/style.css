@@ -26,6 +26,8 @@ body {
   color: #333;
   text-align: center;
   display: flex;
+  position: relative;
+  border: 1px dashed transparent;
   min-width: 200px;
   height: 40px;
   text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff;
@@ -38,6 +40,21 @@ body {
 
 .color:hover {
   transform: scale(1.05);
+}
+
+.selected {
+  border-color: red;
+}
+
+.selected:after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: red;
+  border-radius: 3px;
 }
 
 #modal {
@@ -62,4 +79,9 @@ input[type=text] {
   position: absolute;
   right: 5px;
   top: 2px;
+}
+
+/*Side panerl*/
+#merge {
+  visibility: hidden;
 }

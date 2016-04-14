@@ -177,7 +177,10 @@ function generateMarkup(map) {
       title += `${meta.path}\n`;
     });
     html += `
-      <div class="color" style="background: ${val}" title="${title}">
+      <div class="color"
+           style="background: ${val}"
+           title="${title}"
+           data-color="${val}">
         <b>${val}</b>
         <i>${index}</i>
       </div>

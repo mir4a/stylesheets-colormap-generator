@@ -7,12 +7,16 @@ const gatherColors = require('../helpers/getAllColors');
 
 /* GET colors listing. */
 router.get('/', function(req, res) {
-  let stylesheetsPath = req.app.locals.colormapSettings.stylesheetsPath;
-  let colorSchemePath = req.app.locals.colormapSettings.schemePath;
-  var colors = gatherColors.gather(stylesheetsPath, colorSchemePath);
-  var html = gatherColors.markup(colors);
-  var scheme = gatherColors.scheme(colorSchemePath);
-  res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
+  if (req.app.locals.colormapSettings) {
+    let stylesheetsPath = req.app.locals.colormapSettings.stylesheetsPath;
+    let colorSchemePath = req.app.locals.colormapSettings.schemePath;
+    var colors = gatherColors.gather(stylesheetsPath, colorSchemePath);
+    var html = gatherColors.markup(colors);
+    var scheme = gatherColors.scheme(colorSchemePath);
+    res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
+  } else {
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

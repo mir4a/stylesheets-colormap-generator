@@ -78,14 +78,14 @@
 	  _createClass(ExtendedColorScheme, [{
 	    key: 'bindNewEvents',
 	    value: function bindNewEvents() {
-	      this.mergeWrapper.addEventListener('click', this.mergeHandler);
-	      this.shareButton.addEventListener('click', this.downloadHTML);
-	      this.colorsWrapper.addEventListener('click', this.selectColors);
+	      this.mergeWrapper.addEventListener('click', this.mergeHandler.bind(this));
+	      this.shareButton.addEventListener('click', this.downloadHTML.bind(this));
+	      this.colorsWrapper.addEventListener('click', this.selectColors.bind(this));
 	    }
 	  }, {
 	    key: 'mergeHandler',
 	    value: function mergeHandler(e) {
-	      console.log('mergeHandler: ' + e);
+	      console.log('mergeHandler: ' + JSON.stringify(e));
 	    }
 	  }, {
 	    key: 'downloadHTML',
@@ -95,7 +95,23 @@
 	  }, {
 	    key: 'selectColors',
 	    value: function selectColors(e) {
-	      console.log('selectColors: ' + e);
+	      var target = e.target;
+	      var classList = target.classList;
+	      var color = target.dataset.color;
+	      if (classList.toggle('selected')) {
+	        this.selectedColors.push(color);
+	      } else {
+	        var index = this.selectedColors.indexOf(color);
+	        this.selectedColors.splice(index, 1);
+	      }
+	      return this._toggleMergePanel();
+	    }
+	  }, {
+	    key: '_toggleMergePanel',
+	    value: function _toggleMergePanel() {
+	      var selected = this.selectedColors.length > 0;
+	      this.mergeWrapper.style.visibility = selected ? 'visible' : 'hidden';
+	      return selected;
 	    }
 	  }]);
 
