@@ -21,7 +21,7 @@ block content
       h4.title Select master color
       .merge-list
         each master in masterColors
-          .merge-item(style="background:#{master.color}")
+          .merge-item(style="background:#{master.color}" data-merge-color="#{master.color}")
             span= master.variable
             | &nbsp;
             small= master.color

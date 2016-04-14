@@ -85,7 +85,14 @@
 	  }, {
 	    key: 'mergeHandler',
 	    value: function mergeHandler(e) {
-	      console.log('mergeHandler: ' + JSON.stringify(e));
+	      var target = e.target;
+	      var classList = target.classList;
+	      if (classList.contains('merge-item')) {
+	        var mergeColor = target.dataset.mergeColor;
+	        this._mergeRequestHandler(mergeColor, this.selectedColors);
+	      } else {
+	        console.log(e);
+	      }
 	    }
 	  }, {
 	    key: 'downloadHTML',
@@ -112,6 +119,46 @@
 	      var selected = this.selectedColors.length > 0;
 	      this.mergeWrapper.style.visibility = selected ? 'visible' : 'hidden';
 	      return selected;
+	    }
+	  }, {
+	    key: '_mergeRequestHandler',
+	    value: function _mergeRequestHandler(mergeTo, colors) {
+	      var _this2 = this;
+
+	      var xhr = new XMLHttpRequest();
+	      var colorsParam = colors.join(' ');
+	      var params = 'mergeTo=' + encodeURIComponent(mergeTo) + '&colors=' + encodeURIComponent(colorsParam);
+	      xhr.open('GET', '/merge?' + params, true);
+	      xhr.send();
+	      this._toggleLoader();
+
+	      xhr.onreadystatechange = function () {
+	        if (xhr.readyState != 4) return;
+
+	        if (xhr.status != 200) {
+	          alert(xhr.status + ': ' + xhr.statusText);
+	        } else {
+	          alert(xhr.responseText);
+	          _this2._hideMergedColors(colors);
+	          _this2._toggleLoader();
+	        }
+	      };
+	    }
+	  }, {
+	    key: '_hideMergedColors',
+	    value: function _hideMergedColors(colors) {
+	      if (!colors) return;
+	      for (var i in colors) {
+	        var colorEl = this.colorsWrapper.querySelector('[data-color="' + colors[i] + '"]');
+	        colorEl.style.display = 'none';
+	      }
+	      this.selectedColors = [];
+	    }
+	  }, {
+	    key: '_toggleLoader',
+	    value: function _toggleLoader() {
+	      var body = document.getElementsByTagName('body')[0];
+	      body.classList.toggle('loading');
 	    }
 	  }]);
 
