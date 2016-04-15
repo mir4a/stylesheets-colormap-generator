@@ -25,16 +25,39 @@ function mergeColorsHandler(colorsMap, mergeTo, mergedColors) {
 
   for (let i in colors) {
     let colorObj = colorsMap.get(colors[i]);
-
-    console.log(mergeTo);
-    console.log(colors[i]);
-    console.log(colorObj);
+    handleEditFiles(colorObj.meta, mergeTo);
+    // console.log(mergeTo);
+    // console.log(colors[i]);
+    // console.log(colorObj);
   }
 
 }
 
 function handleEditFiles(list, variable) {
+    while (list.length > 0) {
 
+      console.log('fucks!')
+      let fileObj = list[list.length - 1];
+      let filePath = fileObj.path.split(':');
+
+      try {
+        let writable = fs.createWriteStream(filePath[0], {defaultEncoding: 'utf-8', start:fileObj.startPos});
+
+        writable.on('error', (err)=> {
+          console.log(`write to ${filePath[0]} raised error`);
+          console.error(err);
+        });
+        writable.on('finish', ()=> {
+          console.log(`write to ${filePath[0]} is finished`);
+        });
+        console.log(variable);
+        writable.end(variable, 'utf-8');
+      } catch (err) {
+        console.log(err);
+      }
+      list.pop();
+
+  }
 }
 
 module.exports = router;
