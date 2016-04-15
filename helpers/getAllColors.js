@@ -20,24 +20,26 @@ function parseStylesheetsColors(data, filePath, map) {
   var result = [];
   var test;
   var lines = data.split('\n');
-  var pastLineLength = 0;
-  for (var i = 0, len = lines.length; i < len; i++) {
-    var lineStr = `${filePath}:${i+1}:`;
-    if (i > 0) {
-      pastLineLength += lines[i - 1].length;
-    }
+  var totalReadData = 0;
+  for (let i = 0, len = lines.length; i < len; i++) {
+    let lineStr = `${filePath}:${i+1}:`;
+
+    totalReadData += lines[i].length + 1;
+
     while (test = colorRegexp.exec(lines[i])) {
       // FIXME: Find out how to extract alpha channel
       let colorData = {
         alpha: 1,
-        path: lineStr + (test.index + 1),
+        filePath: filePath,
         originalValue: test[0],
-        startPos: pastLineLength + test.index + 1
+        startPos: totalReadData - (lines[i].length - test.index) - 1,
+        xPath: lineStr + (test.index + 1),
       };
       addToMap(test[0], colorData, map);
       result.push(test[0]);
     }
   }
+  console.log(`totalReadData: ${totalReadData}, data.length: ${data.length}`);
   return result;
 }
 
@@ -174,7 +176,7 @@ function generateMarkup(map) {
     let title = '';
     let index = map.get(val).index;
     map.get(val).meta.forEach((meta)=>{
-      title += `${meta.path}\n`;
+      title += `${meta.xPath}\n`;
     });
     html += `
       <div class="color"

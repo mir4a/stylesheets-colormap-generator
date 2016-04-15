@@ -24,40 +24,84 @@ function mergeColorsHandler(colorsMap, mergeTo, mergedColors) {
   console.log(colors);
 
   for (let i in colors) {
-    let colorObj = colorsMap.get(colors[i]);
-    handleEditFiles(colorObj.meta, mergeTo);
-    // console.log(mergeTo);
-    // console.log(colors[i]);
-    // console.log(colorObj);
+    let color = colors[i];
+    let colorObj = colorsMap.get(color);
+    let startPosMap = groupColorDataByFile(colorObj.meta);
+    handleEditFiles(startPosMap, mergeTo, color);
   }
 
 }
 
-function handleEditFiles(list, variable) {
-    while (list.length > 0) {
+function groupColorDataByFile(meta) {
+  var map = new Map();
+  for (let i in meta) {
+    if (map.has(meta[i].filePath)) {
+      let startPos = map.get(meta[i].filePath);
+      startPos.push(meta[i].startPos);
+      map.set(meta[i].filePath, startPos);
+    } else {
+      let startPos = [meta[i].startPos];
+      map.set(meta[i].filePath, startPos);
+    }
+  }
+  return map;
+}
 
-      console.log('fucks!')
-      let fileObj = list[list.length - 1];
-      let filePath = fileObj.path.split(':');
+function handleEditFiles(startPosMap, variable, color) {
+  //FIXME: One file with multiple needle occurrences should be read>write in one cycle
 
-      try {
-        let writable = fs.createWriteStream(filePath[0], {defaultEncoding: 'utf-8', start:fileObj.startPos});
+  for (let filePath of startPosMap.keys()) {
+    let startPosArr = startPosMap.get(filePath);
+    let fileName = path.basename(filePath);
+    let fileDir = path.dirname(filePath);
+    let readable = fs.createReadStream(filePath, 'utf-8');
+    let writable = fs.createWriteStream(path.resolve(fileDir, fileName + '.tmp'));
+    let readDataLength = 0;
+    let firstStartPos = 0;
+    readable.pause();
 
-        writable.on('error', (err)=> {
-          console.log(`write to ${filePath[0]} raised error`);
-          console.error(err);
-        });
-        writable.on('finish', ()=> {
-          console.log(`write to ${filePath[0]} is finished`);
-        });
-        console.log(variable);
-        writable.end(variable, 'utf-8');
-      } catch (err) {
-        console.log(err);
+    writable.on('error', (err)=> {
+      console.log(`write to ${filePath} raised error`);
+      console.error(err);
+    });
+
+    writable.on('finish', ()=> {
+      console.log(`write to ${filePath} is finished`);
+    });
+
+    readable.on('data', (chunk) => {
+      let chunkLength = chunk.length;
+      if (readDataLength < firstStartPos && firstStartPos > chunkLength) {
+        readDataLength += chunkLength;
+        writable.write(chunk);
+      } else {
+        let startPosCaret = readDataLength + firstStartPos;
+        let data = '';
+        data += chunk.slice(0, startPosCaret);
+        data += variable;
+        data += chunk.slice(startPosCaret + color.length);
+        writable.write(data);
       }
-      list.pop();
+
+      readable.pause();
+
+      console.log('got %d bytes of data', chunk.length);
+    });
+
+    readable.on('end', () => {
+      console.log('there will be no more data.');
+      writable.end();
+    });
+
+    while (startPosArr.length > 0) {
+      firstStartPos = startPosArr.shift();
+      readable.resume();
+    }
+
+    readable.resume();
 
   }
+
 }
 
 module.exports = router;
