@@ -26,8 +26,8 @@ function mergeColorsHandler(colorsMap, mergeTo, mergedColors) {
   for (let i in colors) {
     let color = colors[i];
     let colorObj = colorsMap.get(color);
-    let startPosMap = groupColorDataByFile(colorObj.meta);
-    handleEditFiles(startPosMap, mergeTo, color);
+    let colorDataMap = groupColorDataByFile(colorObj.meta);
+    handleEditFiles(colorDataMap, mergeTo);
   }
 
 }
@@ -36,28 +36,29 @@ function groupColorDataByFile(meta) {
   var map = new Map();
   for (let i in meta) {
     if (map.has(meta[i].filePath)) {
-      let startPos = map.get(meta[i].filePath);
-      startPos.push(meta[i].startPos);
-      map.set(meta[i].filePath, startPos);
+      let colorData = map.get(meta[i].filePath);
+      colorData.push({startPos: meta[i].startPos, color: meta[i].originalValue});
+      map.set(meta[i].filePath, colorData);
     } else {
-      let startPos = [meta[i].startPos];
-      map.set(meta[i].filePath, startPos);
+      let colorData = [{startPos: meta[i].startPos, color: meta[i].originalValue}];
+      map.set(meta[i].filePath, colorData);
     }
   }
   return map;
 }
 
-function handleEditFiles(startPosMap, variable, color) {
+function handleEditFiles(colorDataMap, variable) {
   //FIXME: One file with multiple needle occurrences should be read>write in one cycle
 
-  for (let filePath of startPosMap.keys()) {
-    let startPosArr = startPosMap.get(filePath);
+  for (let filePath of colorDataMap.keys()) {
+    let colorData = colorDataMap.get(filePath);
     let fileName = path.basename(filePath);
     let fileDir = path.dirname(filePath);
     let readable = fs.createReadStream(filePath, 'utf-8');
     let writable = fs.createWriteStream(path.resolve(fileDir, fileName + '.tmp'));
     let readDataLength = 0;
     let firstStartPos = 0;
+    let color = null;
     readable.pause();
 
     writable.on('error', (err)=> {
@@ -93,8 +94,10 @@ function handleEditFiles(startPosMap, variable, color) {
       writable.end();
     });
 
-    while (startPosArr.length > 0) {
-      firstStartPos = startPosArr.shift();
+    while (colorData.length > 0) {
+      let first = colorData.shift();
+      firstStartPos = first.startPos;
+      color = first.color;
       readable.resume();
     }
 
