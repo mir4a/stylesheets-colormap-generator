@@ -68,6 +68,7 @@ function handleEditFiles(colorDataMap, variable) {
 
     writable.on('finish', ()=> {
       console.log(`write to ${filePath} is finished`);
+      fs.rename(filePath, path.resolve(fileDir, fileName + '.tmp'));
     });
 
     readable.on('data', (chunk) => {
