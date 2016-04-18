@@ -56,10 +56,9 @@ function handleEditFiles(colorDataMap, variable) {
     let fileDir = path.dirname(filePath);
     let readable = fs.createReadStream(filePath, 'utf-8');
     let writable = fs.createWriteStream(path.resolve(fileDir, fileName + '.tmp'));
-    let readDataLength = 0;
+    let chunkOffset = 0;
     let firstStartPos = 0;
     let color = null;
-    readable.pause();
 
     writable.on('error', (err)=> {
       console.log(`write to ${filePath} raised error`);
@@ -67,25 +66,33 @@ function handleEditFiles(colorDataMap, variable) {
     });
 
     writable.on('finish', ()=> {
-      console.log(`write to ${filePath} is finished`);
-      fs.rename(filePath, path.resolve(fileDir, fileName + '.tmp'));
+      fs.rename(path.resolve(fileDir, fileName + '.tmp'), filePath, ()=> {
+        console.log(`Edited ${fileDir}`);
+      });
     });
+
+    readable.read();
 
     readable.on('data', (chunk) => {
       let chunkLength = chunk.length;
-      if (readDataLength < firstStartPos && firstStartPos > chunkLength) {
-        readDataLength += chunkLength;
+      let first = colorData[0];
+      let subChunk = chunk;
+      firstStartPos = first.startPos;
+      color = first.color;
+
+      if (chunkOffset < firstStartPos && firstStartPos > chunkLength) {
+        chunkOffset += chunkLength;
         writable.write(chunk);
       } else {
-        let startPosCaret = readDataLength + firstStartPos;
-        let data = '';
-        data += chunk.slice(0, startPosCaret);
-        data += variable;
-        data += chunk.slice(startPosCaret + color.length);
-        writable.write(data);
-      }
 
-      readable.pause();
+        while (subChunk = processingChunk(chunk.slice(chunkOffset), colorData, variable, chunkOffset)) {
+          writable.write(subChunk);
+          if (colorData[0]) {
+            chunkOffset = colorData[0].startPos;
+          }
+        }
+
+      }
 
       console.log('got %d bytes of data', chunk.length);
     });
@@ -95,17 +102,50 @@ function handleEditFiles(colorDataMap, variable) {
       writable.end();
     });
 
-    while (colorData.length > 0) {
-      let first = colorData.shift();
-      firstStartPos = first.startPos;
-      color = first.color;
-      readable.resume();
-    }
-
-    readable.resume();
-
   }
 
+}
+
+function processingChunk(chunk, stopsQueue, joinString, offset) {
+  //FIXME: found bug:
+  // -  background-image: -webkit-linear-gradient(270deg, #000, #000);
+  // -  background-image: linear-gradient(180deg, #000, #000);
+  // -  color: #000;
+  // +  background-image: -webkit-linear-gradient(270deg, #000, #000);$color-jet-black, $color-jet-black);
+  // +  background-image: linear-gradient(180deg, $color-jet-black, $color-jet-black);
+  // +  color: $color-jet-black;
+
+
+  if (stopsQueue.length === 0) {
+    return false;
+  }
+
+  let first = stopsQueue.shift();
+  let before = first.startPos - offset;
+  let after = stopsQueue[0] ? stopsQueue[0].startPos - offset : null;
+  let result = '';
+
+  if (before <= chunk.length - 1) {
+
+    if (after) {
+      if (before) {
+        result += chunk.slice(0, before);
+      }
+      result += joinString;
+      result += chunk.slice(before + first.color.length, after);
+    } else {
+      if (before) {
+        result += chunk.slice(0, before);
+      }
+      result += joinString;
+      result += chunk.slice(before + first.color.length);
+    }
+
+  } else {
+    result = null;
+  }
+
+  return result;
 }
 
 module.exports = router;
