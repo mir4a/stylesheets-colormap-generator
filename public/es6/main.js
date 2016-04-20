@@ -26,8 +26,11 @@ class ExtendedColorScheme extends ColorScheme {
     }
   }
 
-  downloadHTML() {
+  downloadHTML(e) {
     console.log(`downloadHTML: ${e}`);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/download', true);
+    xhr.send();
   }
 
   selectColors(e) {

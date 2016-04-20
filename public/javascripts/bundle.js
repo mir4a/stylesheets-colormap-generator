@@ -96,8 +96,11 @@
 	    }
 	  }, {
 	    key: 'downloadHTML',
-	    value: function downloadHTML() {
+	    value: function downloadHTML(e) {
 	      console.log('downloadHTML: ' + e);
+	      var xhr = new XMLHttpRequest();
+	      xhr.open('GET', '/download', true);
+	      xhr.send();
 	    }
 	  }, {
 	    key: 'selectColors',

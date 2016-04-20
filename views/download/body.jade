@@ -1,0 +1,11 @@
+body
+  #colors
+    each color in colors
+      .color(style="background: #{color.val}" title="#{color.path}")
+        b=color.val
+        i=color.index
+
+  #modal
+    small#close (esc)
+    h5#modal-title
+    pre#modal-content
