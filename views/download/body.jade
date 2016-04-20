@@ -1,11 +1,14 @@
-body
-  #colors
-    each color in colors
-      .color(style="background: #{color.val}" title="#{color.path}")
-        b=color.val
-        i=color.index
+doctype html
+html
+  head
+    title colors
+    style
+      include ../../public/stylesheets/style.css
+  body
+    #colors !{colors}
 
-  #modal
-    small#close (esc)
-    h5#modal-title
-    pre#modal-content
+    #modal
+      small#close (esc)
+      h5#modal-title
+      pre#modal-content
+    include script

@@ -3,18 +3,25 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const jade = require('jade');
 const gatherColors = require('../helpers/getAllColors');
 
 /* GET colors listing. */
 router.get('/', function(req, res) {
   if (req.app.locals.colors) {
-    let colors = req.app.locals.colors;
-    let filename = 'Colors.html';
-    console.log(colors);
-    res.setHeader('Content-disposition', `attachment; filename=${filename}`);
-    res.setHeader('Content-type', 'text/html');
-    res.send('<html>some</html>')
-    // res.render('colors', { title: `${colors.size} colors found`, colors: [...colors.keys()], html: html, masterColors: scheme });
+    let colors = gatherColors.markup(req.app.locals.colors);
+    let filename = 'colors.html';
+    let content = jade.renderFile('./views/download/body.jade', {
+      colors: colors,
+      pretty: true,
+      globals: [colors],
+    });
+
+    res.setHeader('Content-Length', content.length);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'text/html');
+    res.send(content);
+
   } else {
     res.redirect('/colors');
   }
