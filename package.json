@@ -5,10 +5,11 @@
   "scripts": {
     "c": "webpack",
     "start": "npm run c && ./node_modules/.bin/nodemon ./bin/www",
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "release": "standard-version"
   },
   "engines": {
-    "node": ">=5.10.1"
+    "node": ">=5.11.0"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
     "request": "^2.69.0",
+    "standard-version": "^2.1.2",
     "webpack": "^1.12.15"
   }
 }
