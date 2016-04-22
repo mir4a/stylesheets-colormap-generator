@@ -112,21 +112,18 @@ function processDir(path, skip) {
 }
 
 function main(files, dir, skip) {
-  var data,
-      filePath,
-      pType,
-      colors;
-  for (var file of files) {
-    filePath = path.resolve(dir, file);
-    pType = pathType(filePath);
+
+  for (let file of files) {
+    let filePath = path.resolve(dir, file);
+    let pType = pathType(filePath);
 
     if (pType === 'FILE') {
       if (filePath === skip) {
         continue;
       }
 
-      data = fs.readFileSync(filePath, 'utf-8');
-      colors = parseStylesheetsColors(data, filePath, colorMap);
+      let data = fs.readFileSync(filePath, 'utf-8');
+      let colors = parseStylesheetsColors(data, filePath, colorMap);
       countAndPrintProcessedFiles(filePath, colors);
     } else if (pType === 'DIRECTORY') {
       processDir(filePath, skip);

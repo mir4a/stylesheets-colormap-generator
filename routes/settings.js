@@ -1,7 +1,7 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const config = require('../config/settings');
@@ -63,6 +63,39 @@ function checkDir(path) {
   });
 }
 
+function isDir(path) {
+  let stat = fs.statSync(path);
+  return stat.isDirectory();
+}
+
+var dirStructureMarkup = '';
+
+function printFilesStrucureRecursiveHelper(dir) {
+  let dirStructure = fs.readdirSync(dir);
+  while (dirStructure.length > 0) {
+    let name = dirStructure.shift();
+    let fullPath = path.resolve(dir, name);
+
+    if (isDir(fullPath)) {
+      dirStructureMarkup += ` <li class="subdir">\n<a href="${fullPath}">${name}</a>\n<ul>`;
+      printFilesStrucureRecursiveHelper(fullPath);
+      dirStructureMarkup += `</ul>`;
+    } else {
+      dirStructureMarkup += ` <li>\n<a href="${fullPath}">${name}</a></li>\n`;
+    }
+  }
+
+  return dirStructureMarkup;
+}
+
+function printFilesStrucure(dir) {
+  // TODO: Print dir str with markup
+  dirStructureMarkup = '<ul>\n';
+  printFilesStrucureRecursiveHelper(dir);
+  dirStructureMarkup += '</ul>';
+  return dirStructureMarkup;
+}
+
 
 /**
  * Save settings
@@ -72,13 +105,17 @@ function checkDir(path) {
  */
 router.post('/', (req, res, next) => {
 
-  let projectPath = req.body['project-path'];
-  let stylesheetsPath = path.resolve(projectPath, req.body['stylesheets-path']);
-  let schemePath = path.resolve(projectPath, req.body['scheme-path']);
+  let stylesheetsPath = req.body['stylesheets-path'];
+  let schemePath = path.resolve(stylesheetsPath, req.body['scheme-path']);
   let editor = req.body['editor'];
+  console.log(schemePath);
+
+  if (!req.body['scheme-path']) {
+    let html = printFilesStrucure(stylesheetsPath);
+    res.render('settings', { title: `Dir`, html: html});
+  }
 
   req.app.locals.colormapSettings = {
-    projectPath: projectPath,
     stylesheetsPath: stylesheetsPath,
     schemePath: schemePath,
     editor: editor

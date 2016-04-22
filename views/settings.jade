@@ -1,0 +1,11 @@
+extends layout
+
+block js
+  script(src='javascripts/bundle.js')
+
+block flash
+  if flash
+    .notification(class="#{flash.type}")= flash.message
+
+block content
+  #dir-structure !{html}

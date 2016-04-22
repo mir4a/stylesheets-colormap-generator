@@ -6,31 +6,21 @@ block flash
 
 block content
   form#welcome-step-1(method="post" action="/settings" name="settings")
-    h2 #1
-    label(for="project-path")
-      h4 First, show me the path to your project
-      input(type="text" id="project-path" name="project-path" autofocus="true")
-      br
-      small.hint
-        | For example: 
-        code /Users/username/projects/your-super-project
 
-    h2 #2
+    h2 #1
     label(for="stylesheets-path")
-      h4 Second, show me the path to stylesheets
+      h4 First, show me the path to your project's stylesheets directory
       input(type="text" id="stylesheets-path" name="stylesheets-path")
       br
       small.hint
-        | Relative to 
-        span.project-path your project path 
-        | + 
-        code /app/assets/stylesheets
+        | For example, 
+        code /Users/username/projectname/app/assets/stylesheets
 
 
-    h2 #3
+    h2 #2
     label(for="scheme-path")
       h4
-        | Third, show me the path to
+        | Second, show me the path to
         | 
         abbr(title="Simply the SCSS file with variable: color code list") ColorSchema
       input(type="text" id="scheme-path" name="scheme-path")
@@ -52,7 +42,7 @@ block content
           | with name 
           b colors.scss
 
-    h2 #4
+    h2 #3
     label(for="editor")
       h4 Your IDE or editor (bash command name)
       input(type="text" id="editor" name="editor" value="sublime")
