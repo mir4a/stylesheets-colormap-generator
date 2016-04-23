@@ -2,6 +2,8 @@ extends layout
 
 block js
   script(src='javascripts/bundle.js')
+  script.
+    var colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
 
 block flash
   if flash

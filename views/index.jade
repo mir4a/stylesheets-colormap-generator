@@ -7,50 +7,14 @@ block flash
 block content
   form#welcome-step-1(method="post" action="/settings" name="settings")
 
-    h2 #1
     label(for="stylesheets-path")
-      h4 First, show me the path to your project's stylesheets directory
+      h4 Show me the path to your project's stylesheets directory
       input(type="text" id="stylesheets-path" name="stylesheets-path")
       br
       small.hint
         | For example, 
         code /Users/username/projectname/app/assets/stylesheets
 
-
-    h2 #2
-    label(for="scheme-path")
-      h4
-        | Second, show me the path to
-        | 
-        abbr(title="Simply the SCSS file with variable: color code list") ColorSchema
-      input(type="text" id="scheme-path" name="scheme-path")
-      br
-      small.hint
-        | Relative to 
-        span.project-path your project path 
-        | + 
-        code /app/assets/stylesheets/shared/colors.scss
-      br
-      p.or(style="display: none")
-        | Let me 
-        button#generateScheme Generate
-        | 
-        | ColorScheme for you.
-        small
-          | I'll create file in root of 
-          span.stylesheets-path your stylesheets path
-          | with name 
-          b colors.scss
-
-    h2 #3
-    label(for="editor")
-      h4 Your IDE or editor (bash command name)
-      input(type="text" id="editor" name="editor" value="sublime")
-      br
-      small.hint
-        | For example, 
-        code mine 
-        | for RubyMine
       br
       button(type="submit") Next
 

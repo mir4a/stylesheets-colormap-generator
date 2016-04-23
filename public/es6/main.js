@@ -75,7 +75,6 @@ class ExtendedColorScheme extends ColorScheme {
       if (xhr.status != 200) {
         alert(xhr.status + ': ' + xhr.statusText);
       } else {
-        alert(xhr.responseText);
         this._hideMergedColors(colors);
         this._toggleLoader();
       }
@@ -97,5 +96,3 @@ class ExtendedColorScheme extends ColorScheme {
   }
 
 }
-
-let colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');

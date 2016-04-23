@@ -8,4 +8,34 @@ block flash
     .notification(class="#{flash.type}")= flash.message
 
 block content
+
   #dir-structure !{html}
+
+  #settings-form
+
+    form(method="post" action="/settings" name="settings")
+
+      h2 Select scheme file
+      p
+        | Click on any file from the list on the left.
+        | It should be the file with sass variables representing your color scheme
+
+      button(type="submit") Next
+
+      h5 Select files to ignore (optionaly)
+      p.hint
+        | Click on the left side to select ignored files
+
+      input(type="hidden" name="stylesheets-path" value="#{colormapSettings.stylesheetsPath}")
+      input(type="hidden" name="scheme-path" value="#{colormapSettings.schemePath || ''}")
+      input(type="hidden" name="skip-files" value="#{colormapSettings.skipFiles || ''}")
+
+      label(for="editor")
+        h5 Set your IDE or editor (bash command name)
+        input(type="text" id="editor" name="editor" value="sublime")
+        br
+        small.hint
+          | For example, 
+          code mine 
+          | for RubyMine
+

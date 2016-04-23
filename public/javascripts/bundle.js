@@ -150,7 +150,6 @@
 	        if (xhr.status != 200) {
 	          alert(xhr.status + ': ' + xhr.statusText);
 	        } else {
-	          alert(xhr.responseText);
 	          _this2._hideMergedColors(colors);
 	          _this2._toggleLoader();
 	        }
@@ -177,7 +176,7 @@
 	  return ExtendedColorScheme;
 	}(_ColorScheme3.default);
 
-	var colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
+	// let colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
 
 /***/ },
 /* 1 */

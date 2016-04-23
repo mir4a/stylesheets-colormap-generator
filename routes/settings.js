@@ -74,14 +74,18 @@ function printFilesStrucureRecursiveHelper(dir) {
   let dirStructure = fs.readdirSync(dir);
   while (dirStructure.length > 0) {
     let name = dirStructure.shift();
+    if (name[0] === '.') {
+      continue;
+    }
+
     let fullPath = path.resolve(dir, name);
 
     if (isDir(fullPath)) {
-      dirStructureMarkup += ` <li class="subdir">\n<a href="${fullPath}">${name}</a>\n<ul>`;
+      dirStructureMarkup += `<li class="subdir"><a class="dir" href="${fullPath}">${name}</a><ul>`;
       printFilesStrucureRecursiveHelper(fullPath);
       dirStructureMarkup += `</ul>`;
     } else {
-      dirStructureMarkup += ` <li>\n<a href="${fullPath}">${name}</a></li>\n`;
+      dirStructureMarkup += `<li><a class="file" href="${fullPath}">${name}</a></li>`;
     }
   }
 
@@ -89,8 +93,7 @@ function printFilesStrucureRecursiveHelper(dir) {
 }
 
 function printFilesStrucure(dir) {
-  // TODO: Print dir str with markup
-  dirStructureMarkup = '<ul>\n';
+  dirStructureMarkup = '<ul class="dir-list">';
   printFilesStrucureRecursiveHelper(dir);
   dirStructureMarkup += '</ul>';
   return dirStructureMarkup;
@@ -106,22 +109,40 @@ function printFilesStrucure(dir) {
 router.post('/', (req, res, next) => {
 
   let stylesheetsPath = req.body['stylesheets-path'];
-  let schemePath = path.resolve(stylesheetsPath, req.body['scheme-path']);
+  let schemePath = req.body['scheme-path'];
+  let skipFiles = req.body['skip-files'];
   let editor = req.body['editor'];
-  console.log(schemePath);
 
-  if (!req.body['scheme-path']) {
-    let html = printFilesStrucure(stylesheetsPath);
-    res.render('settings', { title: `Dir`, html: html});
+  if (!stylesheetsPath) {
+    res.render('index', {
+      title: 'Colormap',
+      flash: {
+        type: 'error',
+        message: 'Please provide path to stylesheets'
+      },
+    });
   }
 
   req.app.locals.colormapSettings = {
     stylesheetsPath: stylesheetsPath,
     schemePath: schemePath,
+    skipFiles: skipFiles,
     editor: editor
   };
 
-  res.redirect('/colors');
+  res.redirect('/settings');
+});
+
+router.get('/', (req, res, next) => {
+  let colormapSettings = req.app.locals.colormapSettings;
+
+  if (colormapSettings) {
+    let stylesheetsPath = colormapSettings.stylesheetsPath;
+    let html = printFilesStrucure(stylesheetsPath);
+    res.render('settings', { title: `Settings`, html: html, colormapSettings: colormapSettings});
+  } else {
+    res.redirect('/');
+  }
 });
 
 

@@ -1,3 +1,4 @@
+/* Base */
 body {
   padding: 0;
   margin: 0;
@@ -7,6 +8,7 @@ body {
 .loading {
   position: relative;
 }
+
 .loading:after {
   content: 'loading';
   position: fixed;
@@ -16,6 +18,29 @@ body {
   left: 0;
   background: rgba(255,255,255,0.85);
 }
+/* end Base */
+
+/* Forms */
+form {
+  padding: 20px;
+}
+input[type=text] {
+  width: 400px;
+}
+/* end Forms */
+
+/* Notification */
+.notification {
+  padding: 10px;
+  background: yellowgreen;
+}
+.notification.error {
+  color: #fff;
+  background: red;
+}
+/* end Notification */
+
+/* Colors page */
 
 #colors {
   float: left;
@@ -72,7 +97,10 @@ body {
   background: red;
   border-radius: 3px;
 }
+/* end Colors page */
 
+
+/* Modal */
 #modal {
   font-size: 14px;
   display: none;
@@ -87,17 +115,15 @@ body {
   text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff;
 }
 
-input[type=text] {
-  width: 400px;
-}
-
 #close {
   position: absolute;
   right: 5px;
   top: 2px;
 }
+/* end Modal */
 
-/*Side panerl*/
+
+/* Side panerl */
 .sidebar {
   float: left;
   width: 30%;
@@ -137,3 +163,96 @@ input[type=text] {
   cursor: pointer;
   background: #00d;
 }
+/* end Side panerl */
+
+
+/* Settings page */
+#dir-structure {
+  width: 30%;
+  float: left;
+}
+
+#settings-form {
+  width: 70%;
+  float: left;
+}
+
+.dir-list {
+  color: #777;
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+  background: #f3f3f3;
+}
+
+.dir-list a {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  margin-left: 5px;
+  padding: 2px 2px 2px 15px;
+}
+
+.dir-list a:hover {
+  background: #FFF;
+}
+
+.dir::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 11px;
+  height: 8px;
+  background: #444;
+  border-radius: 2px;
+}
+
+.dir::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  bottom: 11px;
+  width: 4px;
+  height: 2px;
+  background: #444;
+  border-radius: 2px;
+}
+
+.file::before {
+  content: 's';
+  position: absolute;
+  color: #949494;
+  font-size: 9px;
+  text-align: center;
+  padding-right: 1px;
+  line-height: 1;
+  left: 0;
+  bottom: 4px;
+  width: 6px;
+  height: 10px;
+  border: 1px solid #444;
+  border-radius: 0 4px 0 0;
+}
+
+.dir-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subdir ul {
+  margin-left: 23px;
+}
+.subdir {
+  position: relative;
+}
+.subdir::before {
+  content: '';
+  border-left: 1px dotted #ababab;
+  position: absolute;
+  left: 9px;
+  top: 23px;
+  bottom: 0;
+}
+/* end Settings page */
