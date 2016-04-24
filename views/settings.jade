@@ -13,7 +13,7 @@ block content
 
   #settings-form
 
-    form(method="post" action="/settings" name="settings")
+    form#settings-form(method="post" action="/settings" name="settings")
 
       h2 Select scheme file
       p
@@ -22,8 +22,8 @@ block content
 
       button(type="submit") Next
 
-      h5 Select files to ignore (optionaly)
-      p.hint
+      h5(style="display:none") Select files to ignore (optionaly)
+      p.hint(style="display:none")
         | Click on the left side to select ignored files
 
       input(type="hidden" name="stylesheets-path" value="#{colormapSettings.stylesheetsPath}")

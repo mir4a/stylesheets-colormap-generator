@@ -1,4 +1,6 @@
-import ColorScheme from './ColorScheme.js';
+import ColorScheme from './ColorScheme';
+import DirSelector from './DirSelector';
+import SettingsForm from './SettingsForm';
 
 class ExtendedColorScheme extends ColorScheme {
   constructor(colorsWrapperId, modalId, mergeWrapperId, shareButtonId) {
@@ -95,4 +97,16 @@ class ExtendedColorScheme extends ColorScheme {
     body.classList.toggle('loading');
   }
 
+}
+
+if (document.getElementById('colors')) {
+  var colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
+}
+
+if (document.getElementById('dir-structure')) {
+  var dirSelector = new DirSelector('dir-structure');
+}
+
+if (document.getElementById('settings-form')) {
+  var settingsForm = new SettingsForm('settings-form');
 }

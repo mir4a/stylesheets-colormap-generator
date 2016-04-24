@@ -52,6 +52,14 @@
 
 	var _ColorScheme3 = _interopRequireDefault(_ColorScheme2);
 
+	var _DirSelector = __webpack_require__(2);
+
+	var _DirSelector2 = _interopRequireDefault(_DirSelector);
+
+	var _SettingsForm = __webpack_require__(3);
+
+	var _SettingsForm2 = _interopRequireDefault(_SettingsForm);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -176,7 +184,17 @@
 	  return ExtendedColorScheme;
 	}(_ColorScheme3.default);
 
-	// let colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
+	if (document.getElementById('colors')) {
+	  var colorScheme = new ExtendedColorScheme('colors', 'modal', 'merge', 'share-colors');
+	}
+
+	if (document.getElementById('dir-structure')) {
+	  var dirSelector = new _DirSelector2.default('dir-structure');
+	}
+
+	if (document.getElementById('settings-form')) {
+	  var settingsForm = new _SettingsForm2.default('settings-form');
+	}
 
 /***/ },
 /* 1 */
@@ -295,6 +313,129 @@
 	}();
 
 	exports.default = ColorScheme;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DirSelector = function () {
+	  function DirSelector(dirWrapperId) {
+	    _classCallCheck(this, DirSelector);
+
+	    this.dirWrapper = document.getElementById(dirWrapperId);
+	    this.files = this.dirWrapper.querySelectorAll('.file');
+	    this.dirs = this.dirWrapper.querySelectorAll('.dir');
+	    this.bindEvents();
+	  }
+
+	  _createClass(DirSelector, [{
+	    key: 'bindEvents',
+	    value: function bindEvents() {
+	      this.dirWrapper.addEventListener('click', this.wrapperClickHandler.bind(this));
+	    }
+	  }, {
+	    key: 'wrapperClickHandler',
+	    value: function wrapperClickHandler(e) {
+	      var target = e.target;
+	      var className = target.getAttribute('class');
+	      if (className.indexOf('dir') >= 0) {
+	        e.preventDefault();
+	        this._dirClickHandler(target);
+	      } else if (className.indexOf('file') >= 0) {
+	        e.preventDefault();
+	        this._fileClickHandler(target);
+	      }
+	      console.log(target);
+	    }
+	  }, {
+	    key: '_fileClickHandler',
+	    value: function _fileClickHandler(target) {
+	      console.log('file job ' + target.href);
+	      if (target.parentNode.className.indexOf('selected') >= 0) {
+	        var kickFileEvent = new CustomEvent('kickFile', { detail: target.title });
+	        document.dispatchEvent(kickFileEvent);
+	      } else {
+	        var selectFileEvent = new CustomEvent('selectFile', { detail: target.title });
+	        document.dispatchEvent(selectFileEvent);
+	      }
+
+	      var oldSelected = target.offsetParent.querySelectorAll('.selected');
+	      for (var len = oldSelected.length, i = 0; i < len; i++) {
+	        oldSelected[i].classList.toggle('selected');
+	      }
+	      target.parentNode.classList.toggle('selected');
+	    }
+	  }, {
+	    key: '_dirClickHandler',
+	    value: function _dirClickHandler(target) {
+	      var siblings = target.nextSibling;
+	      siblings.classList.toggle('collapse');
+	    }
+	  }]);
+
+	  return DirSelector;
+	}();
+
+	exports.default = DirSelector;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var SettingsForm = function () {
+	  function SettingsForm(settingsFormId) {
+	    _classCallCheck(this, SettingsForm);
+
+	    this.settingsForm = document.getElementById(settingsFormId);
+	    this.schemePath = this.settingsForm.querySelector('[name="scheme-path"]');
+	    this.skipFiles = this.settingsForm.querySelector('[name="skip-files"]');
+	    this.bindEvents();
+	  }
+
+	  _createClass(SettingsForm, [{
+	    key: 'bindEvents',
+	    value: function bindEvents() {
+	      document.addEventListener('selectFile', this.selectFileHandler.bind(this));
+	      document.addEventListener('kickFile', this.kickFileHandler.bind(this));
+	    }
+	  }, {
+	    key: 'selectFileHandler',
+	    value: function selectFileHandler(e) {
+	      console.log(e);
+	      this.schemePath.value = e.detail;
+	    }
+	  }, {
+	    key: 'kickFileHandler',
+	    value: function kickFileHandler(e) {
+	      console.log(e);
+	      this.schemePath.value = null;
+	    }
+	  }]);
+
+	  return SettingsForm;
+	}();
+
+	exports.default = SettingsForm;
 
 /***/ }
 /******/ ]);

@@ -170,6 +170,9 @@ input[type=text] {
 #dir-structure {
   width: 30%;
   float: left;
+  overflow: auto;
+  height: 100vh;
+  background: #f3f3f3;
 }
 
 #settings-form {
@@ -182,7 +185,6 @@ input[type=text] {
   list-style: none;
   margin: 0;
   padding: 20px;
-  background: #f3f3f3;
 }
 
 .dir-list a {
@@ -239,6 +241,15 @@ input[type=text] {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.dir-list .collapse {
+  height: 0;
+  overflow: hidden;
+}
+
+.dir-list .selected a {
+  color: red;
 }
 
 .subdir ul {

@@ -81,11 +81,11 @@ function printFilesStrucureRecursiveHelper(dir) {
     let fullPath = path.resolve(dir, name);
 
     if (isDir(fullPath)) {
-      dirStructureMarkup += `<li class="subdir"><a class="dir" href="${fullPath}">${name}</a><ul>`;
+      dirStructureMarkup += `<li class="subdir"><a class="dir" href="${fullPath}" title="${fullPath}">${name}</a><ul>`;
       printFilesStrucureRecursiveHelper(fullPath);
       dirStructureMarkup += `</ul>`;
     } else {
-      dirStructureMarkup += `<li><a class="file" href="${fullPath}">${name}</a></li>`;
+      dirStructureMarkup += `<li><a class="file" href="${fullPath}" title="${fullPath}">${name}</a></li>`;
     }
   }
 
@@ -113,6 +113,13 @@ router.post('/', (req, res, next) => {
   let skipFiles = req.body['skip-files'];
   let editor = req.body['editor'];
 
+  req.app.locals.colormapSettings = {
+    stylesheetsPath: stylesheetsPath,
+    schemePath: schemePath,
+    skipFiles: skipFiles,
+    editor: editor
+  };
+
   if (!stylesheetsPath) {
     res.render('index', {
       title: 'Colormap',
@@ -121,14 +128,11 @@ router.post('/', (req, res, next) => {
         message: 'Please provide path to stylesheets'
       },
     });
+  } else if (schemePath) {
+
+    res.redirect('/colors');
   }
 
-  req.app.locals.colormapSettings = {
-    stylesheetsPath: stylesheetsPath,
-    schemePath: schemePath,
-    skipFiles: skipFiles,
-    editor: editor
-  };
 
   res.redirect('/settings');
 });
