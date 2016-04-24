@@ -172,7 +172,9 @@ function generateMarkup(map) {
   sortedColors.forEach((val)=>{
     let title = '';
     let index = map.get(val).index;
+    let appearsCounter = 0;
     map.get(val).meta.forEach((meta)=>{
+      appearsCounter++;
       title += `${meta.xPath}\n`;
     });
     html += `
@@ -182,6 +184,7 @@ function generateMarkup(map) {
            data-color="${val}">
         <b>${val}</b>
         <i>${index}</i>
+        <i class="counter">${appearsCounter}</i>
       </div>
     `;
   });

@@ -1,11 +1,11 @@
 doctype html
 html
   head
-    title colors
+    title colors #{colors.count}
     style
       include ../../public/stylesheets/style.css
   body
-    #colors !{colors}
+    #colors !{colors.html}
 
     #modal
       small#close (esc)
