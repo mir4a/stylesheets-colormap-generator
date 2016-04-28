@@ -16,7 +16,7 @@ router.get('/', function(req, res) {
 
   mergeColorsHandler(colorsMap, mergeTo, mergedColors);
 
-  res.status(200).send('Merged!');
+  res.redirect('/colors');
 });
 
 function mergeColorsHandler(colorsMap, mergeTo, mergedColors) {

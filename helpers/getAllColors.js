@@ -122,9 +122,7 @@ function main(files, dir, skip) {
         continue;
       }
 
-      let data = fs.readFileSync(filePath, 'utf-8');
-      let colors = parseStylesheetsColors(data, filePath, colorMap);
-      countAndPrintProcessedFiles(filePath, colors);
+      processFile(filePath);
     } else if (pType === 'DIRECTORY') {
       processDir(filePath, skip);
     } else {
@@ -132,6 +130,12 @@ function main(files, dir, skip) {
     }
 
   }
+}
+
+function processFile(filePath) {
+  let data = fs.readFileSync(filePath, 'utf-8');
+  let colors = parseStylesheetsColors(data, filePath, colorMap);
+  countAndPrintProcessedFiles(filePath, colors);
 }
 
 function handleScheme(filePath) {
@@ -151,7 +155,13 @@ function mainHandler(dir, skip) {
 
   var start = new Date();
   var end, diff;
-  processDir(dir, skip);
+  let dirType = pathType(dir);
+
+  if (dirType === 'FILE') {
+    processFile(dir);
+  } else {
+    processDir(dir, skip);
+  }
   end = new Date();
   diff = end - start;
   console.log(`Finished for ${diff}ms, found ${colorMap.size} colors`);

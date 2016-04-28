@@ -26,9 +26,16 @@ block content
       p.hint(style="display:none")
         | Click on the left side to select ignored files
 
-      input(type="hidden" name="stylesheets-path" value="#{colormapSettings.stylesheetsPath}")
-      input(type="hidden" name="scheme-path" value="#{colormapSettings.schemePath || ''}")
-      input(type="hidden" name="skip-files" value="#{colormapSettings.skipFiles || ''}")
+      br
+      label(for="stylesheets-path")
+        h5 Stylesheets path
+        input(type="text" id="stylesheets-path" name="stylesheets-path" value="#{colormapSettings.stylesheetsPath}")
+      label(for="scheme-path")
+        h5 Scheme path
+        input(type="text" id="scheme-path" name="scheme-path" value="#{colormapSettings.schemePath || ''}")
+      label(for="skip-files")
+        h5 Skip files
+        input(type="text" id="skip-files" name="skip-files" value="#{colormapSettings.skipFiles || ''}")
 
       label(for="editor")
         h5 Set your IDE or editor (bash command name)
