@@ -1,0 +1,48 @@
+extends layout
+
+block js
+  script(src='javascripts/bundle.js')
+
+block flash
+  if flash
+    .notification(class="#{flash.type}")= flash.message
+
+block content
+
+  #dir-structure !{html}
+
+  #settings-form
+
+    form#settings-form(method="post" action="/settings" name="settings")
+
+      h2 Select scheme file
+      p
+        | Click on any file from the list on the left.
+        | It should be the file with sass variables representing your color scheme
+
+      button(type="submit") Next
+
+      h5(style="display:none") Select files to ignore (optionaly)
+      p.hint(style="display:none")
+        | Click on the left side to select ignored files
+
+      br
+      label(for="stylesheets-path")
+        h5 Stylesheets path
+        input(type="text" id="stylesheets-path" name="stylesheets-path" value="#{colormapSettings.stylesheetsPath}")
+      label(for="scheme-path")
+        h5 Scheme path
+        input(type="text" id="scheme-path" name="scheme-path" value="#{colormapSettings.schemePath || ''}")
+      label(for="skip-files")
+        h5 Skip files
+        input(type="text" id="skip-files" name="skip-files" value="#{colormapSettings.skipFiles || ''}")
+
+      label(for="editor")
+        h5 Set your IDE or editor (bash command name)
+        input(type="text" id="editor" name="editor" value="sublime")
+        br
+        small.hint
+          | For example, 
+          code mine 
+          | for RubyMine
+

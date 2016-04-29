@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title colors #{colors.count}
+    style
+      include ../../public/stylesheets/style.css
+  body
+    .colors-wrapper
+      #colors !{colors.html}
+
+    #modal
+      small#close (esc)
+      h5#modal-title
+      pre#modal-content
+    include script

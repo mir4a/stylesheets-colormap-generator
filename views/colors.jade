@@ -1,0 +1,33 @@
+extends layout
+
+block js
+  script(src='javascripts/bundle.js')
+
+block flash
+  if flash
+    .notification(class="#{flash.type}")= flash.message
+
+block content
+  .colors-wrapper
+    #colors
+      !{html}
+      .colors-overlay
+
+  #modal
+    small#close (esc)
+    h5#modal-title
+    pre#modal-content
+
+  aside.sidebar
+    button#share-colors Download colors.html
+    #merge
+      h4.title Color scheme
+      small Click on color to merge
+      .merge-list
+        each master in masterColors
+          .merge-item(style="background:#{master.color}"
+                      data-merge-color="#{master.color}"
+                      data-merge-variable="#{master.variable}")
+            span= master.variable
+            | &nbsp;
+            small= master.color
