@@ -56,6 +56,7 @@ input[type=text] {
 }
 
 #colors {
+  position: relative;
   display: flex;
 
   margin: 0;
@@ -121,6 +122,7 @@ input[type=text] {
   align-items: center;
   justify-content: space-around;
   align-content: center;
+  z-index: 0;
 }
 
 .color:hover {
@@ -128,8 +130,10 @@ input[type=text] {
 }
 
 .color.selected {
+  position: relative;
   border-color: red;
   box-shadow: inset 0 0 0 1px #fff;
+  z-index: 2;
 }
 
 .selected:after {
@@ -145,6 +149,16 @@ input[type=text] {
   border-radius: 3px;
   background: red;
   box-shadow: 0 0 1px 1px #fff;
+}
+
+.colors-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  z-index: 1;
 }
 /* end Colors page */
 
@@ -207,7 +221,7 @@ input[type=text] {
     0 1px 1px rgba(255,255,255,0.5),
     0 -1px 1px rgba(255,255,255,0.5);
 }
-/*TODO: Make overlay with hovered effect to best match for selected colors*/
+
 .merge-item:hover {
   cursor: pointer;
 

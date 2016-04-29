@@ -6,26 +6,40 @@ class ExtendedColorScheme extends ColorScheme {
   constructor(colorsWrapperId, modalId, mergeWrapperId, shareButtonId) {
     super(colorsWrapperId, modalId);
     this.mergeWrapper = document.getElementById(mergeWrapperId);
+    this.mergeItems = this.mergeWrapper.querySelectorAll('.merge-item');
     this.shareButton = document.getElementById(shareButtonId);
+    this.colorsOverlay = this.colorsWrapper.querySelector('.colors-overlay');
     this.selectedColors = [];
     this.bindNewEvents();
   }
 
   bindNewEvents() {
-    this.mergeWrapper.addEventListener('click', this.mergeHandler.bind(this));
+    [...this.mergeItems].forEach( item => {
+      item.addEventListener('click', this.mergeHandler.bind(this));
+      item.addEventListener('mouseenter', this.setOverlayColor.bind(this));
+      item.addEventListener('mouseleave', this.resetOverlayColor.bind(this));
+    });
     this.shareButton.addEventListener('click', this.downloadHTML.bind(this));
     this.colorsWrapper.addEventListener('click', this.selectColors.bind(this));
   }
 
-  mergeHandler(e) {
+  resetOverlayColor(e) {
+    this.colorsOverlay.style.background = 'none';
+    this.colorsOverlay.style.display = 'none';
+  }
+
+  setOverlayColor(e) {
     let target = e.target;
-    let classList = target.classList;
-    if (classList.contains('merge-item')) {
-      let mergeVariable = target.dataset.mergeVariable;
-      this._mergeRequestHandler(mergeVariable, this.selectedColors);
-    } else {
-      console.log(e);
-    }
+    let mergeColor = target.dataset.mergeColor;
+    this.colorsOverlay.style.background = mergeColor;
+    this.colorsOverlay.style.setProperty('display', 'block', 'important');
+  }
+
+  mergeHandler(e) {
+    let target = e.currentTarget;
+    let mergeVariable = target.dataset.mergeVariable;
+    this._mergeRequestHandler(mergeVariable, this.selectedColors);
+    return target;
   }
 
   downloadHTML(e) {

@@ -62,6 +62,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -77,7 +79,9 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ExtendedColorScheme).call(this, colorsWrapperId, modalId));
 
 	    _this.mergeWrapper = document.getElementById(mergeWrapperId);
+	    _this.mergeItems = _this.mergeWrapper.querySelectorAll('.merge-item');
 	    _this.shareButton = document.getElementById(shareButtonId);
+	    _this.colorsOverlay = _this.colorsWrapper.querySelector('.colors-overlay');
 	    _this.selectedColors = [];
 	    _this.bindNewEvents();
 	    return _this;
@@ -86,21 +90,37 @@
 	  _createClass(ExtendedColorScheme, [{
 	    key: 'bindNewEvents',
 	    value: function bindNewEvents() {
-	      this.mergeWrapper.addEventListener('click', this.mergeHandler.bind(this));
+	      var _this2 = this;
+
+	      [].concat(_toConsumableArray(this.mergeItems)).forEach(function (item) {
+	        item.addEventListener('click', _this2.mergeHandler.bind(_this2));
+	        item.addEventListener('mouseenter', _this2.setOverlayColor.bind(_this2));
+	        item.addEventListener('mouseleave', _this2.resetOverlayColor.bind(_this2));
+	      });
 	      this.shareButton.addEventListener('click', this.downloadHTML.bind(this));
 	      this.colorsWrapper.addEventListener('click', this.selectColors.bind(this));
 	    }
 	  }, {
+	    key: 'resetOverlayColor',
+	    value: function resetOverlayColor(e) {
+	      this.colorsOverlay.style.background = 'none';
+	      this.colorsOverlay.style.display = 'none';
+	    }
+	  }, {
+	    key: 'setOverlayColor',
+	    value: function setOverlayColor(e) {
+	      var target = e.target;
+	      var mergeColor = target.dataset.mergeColor;
+	      this.colorsOverlay.style.background = mergeColor;
+	      this.colorsOverlay.style.setProperty('display', 'block', 'important');
+	    }
+	  }, {
 	    key: 'mergeHandler',
 	    value: function mergeHandler(e) {
-	      var target = e.target;
-	      var classList = target.classList;
-	      if (classList.contains('merge-item')) {
-	        var mergeVariable = target.dataset.mergeVariable;
-	        this._mergeRequestHandler(mergeVariable, this.selectedColors);
-	      } else {
-	        console.log(e);
-	      }
+	      var target = e.currentTarget;
+	      var mergeVariable = target.dataset.mergeVariable;
+	      this._mergeRequestHandler(mergeVariable, this.selectedColors);
+	      return target;
 	    }
 	  }, {
 	    key: 'downloadHTML',
@@ -143,7 +163,7 @@
 	  }, {
 	    key: '_mergeRequestHandler',
 	    value: function _mergeRequestHandler(mergeTo, colors) {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      var xhr = new XMLHttpRequest();
 	      var colorsParam = colors.join(';');
@@ -158,8 +178,8 @@
 	        if (xhr.status != 200) {
 	          alert(xhr.status + ': ' + xhr.statusText);
 	        } else {
-	          _this2._hideMergedColors(colors);
-	          _this2._toggleLoader();
+	          _this3._hideMergedColors(colors);
+	          _this3._toggleLoader();
 	        }
 	      };
 	    }
