@@ -1,6 +1,6 @@
 {
   "name": "stylesheets-colormap-generator",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Generates colormap from selected stylesheets and helps to convert them into variable with merge option",
   "scripts": {
     "c": "webpack",

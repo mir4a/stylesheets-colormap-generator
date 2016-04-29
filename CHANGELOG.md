@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/mir4a/stylesheets-colormap-generator/compare/v0.4.0...v0.5.0) (2016-04-29)
+
+
+### Features
+
+* **visaul merge:** add visual overlay with hovered master color bg ([f67293c](https://github.com/mir4a/stylesheets-colormap-generator/commit/f67293c))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/mir4a/stylesheets-colormap-generator/compare/v0.3.0...v0.4.0) (2016-04-28)
 
